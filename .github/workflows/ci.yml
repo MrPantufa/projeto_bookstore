@@ -1,0 +1,48 @@
+﻿name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: pip install flake8
+      - run: flake8 .
+
+  compose-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show compose files (if present)
+        run: |
+          [ -f docker-compose.yml ] && cat docker-compose.yml || true
+          [ -f docker-compose.override.yml ] && cat docker-compose.override.yml || true
+      - name: Validate compose syntax (if compose exists)
+        run: |
+          if [ -f docker-compose.yml ]; then
+            docker compose -f docker-compose.yml config
+          else
+            echo "No docker-compose.yml found. Skipping validation."
+          fi
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with Docker Compose (if compose exists)
+        run: |
+          if [ -f docker-compose.yml ]; then
+            docker compose build --pull
+          elif [ -f Dockerfile ]; then
+            docker build -t bookstore:ci .
+          else
+            echo "Nenhum docker-compose.yml ou Dockerfile encontrado; pulando build."
+          fi
