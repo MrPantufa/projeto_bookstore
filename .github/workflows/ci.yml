@@ -15,7 +15,7 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
       - run: pip install flake8
-      - run: flake8 .
+      - run: flake8 --config .flake8 .
 
   compose-check:
     runs-on: ubuntu-latest
@@ -25,3 +25,15 @@ jobs:
         run: |
           [ -f docker-compose.yml ] && cat docker-compose.yml || true
           [ -f docker-compose.override.yml ] && cat docker-compose.override.yml || true
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Dockerfile (if any)
+        run: |
+          if [ -f Dockerfile ]; then
+            echo "Dockerfile found"; head -n 20 Dockerfile || true
+          else
+            echo "No Dockerfile (ok, compose-only project)"
+          fi
