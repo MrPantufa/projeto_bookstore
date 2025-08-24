@@ -1,22 +1,26 @@
 [flake8]
-# Mantém um limite razoável p/ Django
 max-line-length = 120
-# Compatibilidade com Black
+# Compatível com Black
 extend-ignore = E203, W503
 
-# Não analisar caches, envs e migrations
+# Não analisar caches/env/migrations
 exclude =
     .git,
     __pycache__,
     venv,
     env,
-    ./migrations/*
+    */migrations/*
 
-# Ignora alertas comuns em arquivos específicos:
+# Ignora avisos onde é comum ter re-exports/imports “de propósito”
 per-file-ignores =
-    # settings.py: linhas longas
-    bookstore/settings.py:E501
-    # admin.py: imports só para registro
+    # reexports agregadores
+    */__init__.py:F401
+    # views/admin gerados por startapp
+    */views.py:F401
     */admin.py:F401
-    # testes: paths longos e imports de fixtures
-    tests/*:E501,F401
+    # fábricas e testes: imports não usados, redefinições, variáveis não usadas, e excesso de linhas em branco
+    */factories.py:F401,F811
+    tests/*:F401,F841,E303
+
+    # caso pontual do seu log
+    product/models/product.py:E303
