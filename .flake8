@@ -18,9 +18,6 @@ per-file-ignores =
     # views/admin gerados por startapp
     */views.py:F401
     */admin.py:F401
-    # fábricas e testes: imports não usados, redefinições, variáveis não usadas, e excesso de linhas em branco
+    # fábricas e testes nas apps
     */factories.py:F401,F811
-    tests/*:F401,F841,E303
-
-    # caso pontual do seu log
-    product/models/product.py:E303
+    */tests/*:F401,F841,E303
