@@ -1,0 +1,5 @@
+{
+  "product_public_status": 200,
+  "order_unauth_status": 401,
+  "order_auth_status": 200
+}

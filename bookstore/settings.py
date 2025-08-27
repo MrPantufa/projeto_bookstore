@@ -1,4 +1,4 @@
-import os
+﻿import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,4 +80,58 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+}
+
+# --- [AUTO] Garantir DEFAULT_AUTHENTICATION_CLASSES com Basic/Session/Token ---
+try:
+    REST_FRAMEWORK
+except NameError:
+    REST_FRAMEWORK = {}
+
+_auth = set(REST_FRAMEWORK.get("DEFAULT_AUTHENTICATION_CLASSES", []))
+_auth.update([
+    'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
+])
+REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = list(_auth)
+# --- [/AUTO] ---
+
+# --- [AUTO] DRF_DEFAULTS_PATCH ---
+try:
+    REST_FRAMEWORK
+except NameError:
+    REST_FRAMEWORK = {}
+
+_auth = set(REST_FRAMEWORK.get("DEFAULT_AUTHENTICATION_CLASSES", []))
+_auth.update([
+    "rest_framework.authentication.TokenAuthentication",
+    "rest_framework.authentication.SessionAuthentication",
+    "rest_framework.authentication.BasicAuthentication",
+])
+REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = list(_auth)
+
+# Product deve ser público por padrão (feedback do professor)
+REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = ["rest_framework.permissions.AllowAny"]
+# --- [/AUTO] DRF_DEFAULTS_PATCH ---
+# --- [AUTO] HOSTS_PATCH ---
+try:
+    ALLOWED_HOSTS
+except NameError:
+    ALLOWED_HOSTS = []
+def _add_host(h):
+    if h not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(h)
+for h in ["testserver","localhost","127.0.0.1"]:
+    _add_host(h)
+# --- [/AUTO] HOSTS_PATCH ---
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],
 }
