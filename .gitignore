@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 .verify_*.py
+
+.verify_*.py
