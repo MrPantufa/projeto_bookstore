@@ -1,0 +1,26 @@
+[project]
+name = "projeto-bookstore"
+version = "0.1.0"
+description = "Bookstore API (Django + DRF, token auth)"
+authors = [
+    {name = "Mateus",email = "mateusmoraes0232017@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = "^3.12"
+dependencies = [
+    "django (>=5.0,<6.0)",
+    "djangorestframework (>=3.15,<4.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-django = "^4.9"
+factory-boy = "^3.3.3"
+faker = "^37.6.0"
+
