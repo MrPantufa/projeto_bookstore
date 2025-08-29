@@ -1,0 +1,20 @@
+name: Docker build & smoke test
+on: [push, pull_request]
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker --version && docker compose version
+      - run: docker compose up -d --build
+      - name: GET /hello/ (até 2 min)
+        run: |
+          for i in {1..60}; do
+            if curl -fsS http://localhost:8000/hello/ > /dev/null; then
+              echo OK; exit 0
+            fi
+            sleep 2
+          done
+          echo "Timeout esperando /hello/"; docker compose logs --tail=200 web db; exit 1
+      - if: always()
+        run: docker compose down -v
