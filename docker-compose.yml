@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:13
@@ -8,7 +6,7 @@ services:
       POSTGRES_USER: bookstore
       POSTGRES_PASSWORD: bookstore
     healthcheck:
-      test: ["CMD-SHELL","pg_isready -U bookstore -d bookstore"]
+      test: ["CMD-SHELL", "pg_isready -U bookstore -d bookstore"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -27,15 +25,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
+    command: ["sh","-c","python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+    ports: ["8000:8000"]
     networks: [bookstore_net]
 
 networks:
   bookstore_net:
     name: bookstore_net
-
-

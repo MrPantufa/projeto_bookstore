@@ -1,0 +1,18 @@
+﻿services:
+  web:
+    networks:
+      - bookstore_net
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+  db:
+    networks:
+      - bookstore_net
+    ports: []          
+
+networks:
+  bookstore_net:
+    name: bookstore_net
+    driver: bridge

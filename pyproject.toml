@@ -3,7 +3,12 @@ name = "bookstore"
 version = "0.1.0"
 description = "Django bookstore with Postgres and Docker Compose"
 authors = ["Mateus <you@example.com>"]
-package-mode = false
+package-mode = true
+packages = [
+  { include = "bookstore" },
+  { include = "product" },
+  { include = "order" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
